@@ -13,12 +13,12 @@ const addOns = [
 
 function AddOns() {
   return (
-    <section className="section-space bg-white">
+    <section className="section-space addons-section">
       <div className="container">
         <div className="row align-items-end mb-4 g-3">
           <div className="col-lg-7">
-            <p className="section-eyebrow">Add-ons</p>
-            <h2 className="section-title">Extra help when the search moves forward.</h2>
+            <p className="section-eyebrow">Support beyond applications</p>
+            <h2 className="section-title">Be ready when an opportunity responds.</h2>
           </div>
           <div className="col-lg-5">
             <p className="text-secondary mb-0">
@@ -45,4 +45,3 @@ function AddOns() {
 }
 
 export default AddOns;
-

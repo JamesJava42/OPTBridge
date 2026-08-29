@@ -1,45 +1,47 @@
 const steps = [
   {
     number: '01',
-    title: 'Join a monthly batch',
-    text: 'Choose the batch month and submit your resume so support can start with clear context.',
+    title: 'Complete your search profile',
+    text: 'Share your status, target roles, locations, experience, and resume. We use it to check fit and scope.',
   },
   {
     number: '02',
-    title: 'Choose your plan',
-    text: 'Pick AI Batch, Human Tailored Batch, or Hybrid Batch based on your application strategy.',
+    title: 'Review fit and activate',
+    text: 'We recommend a scope and plan. After you approve and pay, your private member workspace opens.',
   },
   {
     number: '03',
-    title: 'Track support through month-end',
-    text: 'Receive email updates and follow applications in an Excel or Google Sheet tracker.',
+    title: 'Run the weekly workflow',
+    text: 'Review matched roles, tailored materials, and next actions in one shared tracker.',
+  },
+  {
+    number: '04',
+    title: 'Learn and refine',
+    text: 'Use weekly response signals and a month-end review to sharpen the next search sprint.',
   },
 ];
 
 function HowItWorks() {
   return (
-    <section className="section-space section-tint" id="how-it-works">
+    <section className="section-space how-section" id="how-it-works">
       <div className="container">
-        <div className="row align-items-end mb-4 g-3">
-          <div className="col-lg-7">
+        <div className="row align-items-end section-heading g-3">
+          <div className="col-lg-8">
             <p className="section-eyebrow">How it works</p>
-            <h2 className="section-title">A simple monthly rhythm from resume to updates.</h2>
+            <h2 className="section-title">A focused sprint with clear checkpoints.</h2>
           </div>
-          <div className="col-lg-5">
+          <div className="col-lg-4">
             <p className="text-secondary mb-0">
-              OPTBridge keeps the process focused on one batch at a time, making support easier to follow and easier to renew.
+              You always know what we are doing, what needs your input, and what comes next.
             </p>
           </div>
         </div>
-        <div className="row g-4">
+        <div className="process-grid">
           {steps.map((step) => (
-            <div className="col-md-4" key={step.number}>
-              <div className="soft-card h-100">
-                <span className="step-number">{step.number}</span>
-                <h3 className="h5 mt-3">{step.title}</h3>
-                <p className="text-secondary mb-0">{step.text}</p>
-              </div>
-            </div>
+            <article className="process-step" key={step.number}>
+              <span className="step-number">{step.number}</span>
+              <div><h3>{step.title}</h3><p>{step.text}</p></div>
+            </article>
           ))}
         </div>
       </div>
@@ -48,4 +50,3 @@ function HowItWorks() {
 }
 
 export default HowItWorks;
-

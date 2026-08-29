@@ -1,5 +1,6 @@
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../config/site.js';
 
 function Privacy() {
   return (
@@ -9,19 +10,21 @@ function Privacy() {
         <div className="container">
           <div className="legal-card">
             <p className="section-eyebrow">Legal</p>
-            <h1 className="mb-4">Privacy Policy</h1>
-            <p>
-              This placeholder privacy policy explains that OPTBridge may collect contact details, resume information,
-              plan preferences, and job-search details submitted by students.
-            </p>
-            <p>
-              Information is used to provide batch support, send updates, organize application tracking, and communicate
-              about the service. OPTBridge should not sell personal information.
-            </p>
-            <p className="mb-0">
-              Students may request changes or removal of their information by contacting OPTBridge through the official
-              service channel once published.
-            </p>
+            <h1 className="mb-2">Privacy Policy</h1>
+            <p className="legal-updated">Last updated: August 29, 2026</p>
+            <p>OPTBridge respects the privacy of students and visitors. This policy explains the information we collect, why we use it, and the choices available to you.</p>
+            <h2>Information we collect</h2>
+            <p>We may collect contact information, work-authorization context, target roles and locations, resume or LinkedIn links, support messages, plan preferences, and job-search information you choose to submit. We may also receive basic website usage and device information from hosting or analytics providers.</p>
+            <h2>How we use information</h2>
+            <p>We use information to respond to questions, review service fit, provide job-search support, organize application tracking, maintain account access, improve the service, prevent misuse, and meet applicable business obligations.</p>
+            <h2>Sharing and selling</h2>
+            <p>OPTBridge does not sell personal information. Information may be shared with service providers that support hosting, forms, email, analytics, payments, or service delivery, only as needed for those functions. We may disclose information when required by law or necessary to protect users and the service.</p>
+            <h2>Retention and security</h2>
+            <p>We retain information only as reasonably needed for the service, support, recordkeeping, and legal obligations. No online system is completely secure, so please do not submit passwords, Social Security numbers, payment card numbers, or immigration documents through public forms.</p>
+            <h2>Your choices</h2>
+            <p>You may ask to access, correct, or delete information associated with your request, subject to applicable recordkeeping requirements. You may also opt out of non-essential marketing messages.</p>
+            <h2>Contact</h2>
+            <p className="mb-0">For privacy questions or requests, email <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>.</p>
           </div>
         </div>
       </main>
@@ -31,4 +34,3 @@ function Privacy() {
 }
 
 export default Privacy;
-

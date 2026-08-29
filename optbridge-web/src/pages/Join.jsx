@@ -2,30 +2,68 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
+import Icon from '../components/Icon.jsx';
 import { plans } from '../data/plans.js';
-import { increaseIntakeCounter, useIntakeCounter } from '../hooks/useIntakeCounter.js';
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../config/site.js';
+import { track } from '@vercel/analytics';
 
 const planNames = plans.map((plan) => plan.name);
 
 function Join() {
   const [searchParams] = useSearchParams();
   const requestedPlan = searchParams.get('plan');
-  const startingPlan = planNames.includes(requestedPlan) ? requestedPlan : 'Hybrid Batch';
+  const startingPlan = planNames.includes(requestedPlan) ? requestedPlan : 'Copilot';
   const [selectedPlan, setSelectedPlan] = useState(startingPlan);
-  const [submitted, setSubmitted] = useState(false);
-  const requestCount = useIntakeCounter();
+  const [submitState, setSubmitState] = useState('idle');
+  const [submitMessage, setSubmitMessage] = useState('');
 
   const plan = useMemo(
     () => plans.find((currentPlan) => currentPlan.name === selectedPlan) || plans[2],
     [selectedPlan]
   );
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    increaseIntakeCounter();
-    setSubmitted(true);
-    event.currentTarget.reset();
-    setSelectedPlan(startingPlan);
+    const form = event.currentTarget;
+    const endpoint = import.meta.env.VITE_INTAKE_ENDPOINT;
+    const fields = Object.fromEntries(new FormData(form).entries());
+    const payload = {
+      ...fields,
+      requestId: `FIT-${Date.now().toString().slice(-6)}`,
+      source: 'OPTBridge fit review form',
+      _subject: `[OPTBridge] New fit review: ${fields.fullName}`,
+    };
+
+    setSubmitState('submitting');
+    setSubmitMessage('');
+
+    if (!endpoint) {
+      if (import.meta.env.PROD) {
+        setSubmitState('error');
+        setSubmitMessage('Online intake is temporarily unavailable. Please contact support directly.');
+        return;
+      }
+      setSubmitState('preview');
+      setSubmitMessage('Preview complete: your information is valid, but no intake endpoint is configured yet, so nothing was sent.');
+      return;
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error('Submission failed');
+      track('Fit Review Submitted', { plan: fields.plan });
+      setSubmitState('success');
+      setSubmitMessage('Your fit request has been received. We’ll review it and email you with next steps.');
+      form.reset();
+      setSelectedPlan(startingPlan);
+    } catch {
+      setSubmitState('error');
+      setSubmitMessage('We could not send your request. Please try again or contact support.');
+    }
   };
 
   return (
@@ -34,20 +72,16 @@ function Join() {
       <main className="join-page">
         <section className="join-hero">
           <div className="container">
-            <div className="row align-items-center g-4">
-              <div className="col-lg-7">
-                <p className="section-eyebrow">Join next batch</p>
-                <h1 className="display-5 fw-bold mb-3">Submit your OPTBridge intake details.</h1>
-                <p className="lead text-secondary mb-0">
-                  Share your plan, work authorization status, target roles, and resume link so the monthly batch can start with clear context.
-                </p>
-              </div>
-              <div className="col-lg-5">
-                <div className="join-counter-card">
-                  <span>Batch request counter</span>
-                  <strong>{requestCount}</strong>
-                  <small>Increases after each form submission in this browser.</small>
-                </div>
+            <div className="join-hero-copy">
+              <span className="hero-badge"><Icon name="spark" size={16} /> Free fit review</span>
+              <h1>Tell us where you are—and where you want to go.</h1>
+              <p>
+                We’ll use this profile to assess fit, recommend a sprint, and define the right job-search scope. No payment is collected here.
+              </p>
+              <div className="join-trust-row">
+                <span><Icon name="clock" size={16} /> About 5 minutes</span>
+                <span><Icon name="shield" size={16} /> Private intake</span>
+                <span><Icon name="human" size={16} /> Reviewed by a person</span>
               </div>
             </div>
           </div>
@@ -56,14 +90,15 @@ function Join() {
         <section className="section-space">
           <div className="container">
             <div className="row g-4">
-              <div className="col-lg-7">
+              <div className="col-lg-8">
                 <form className="join-form soft-card" onSubmit={handleSubmit}>
-                  {submitted && (
-                    <div className="alert alert-success" role="alert">
-                      Intake saved for preview. Connect this form to Google Forms, Sheets, or email before launch.
+                  {submitMessage && (
+                    <div className={`alert ${submitState === 'error' ? 'alert-danger' : submitState === 'preview' ? 'alert-warning' : 'alert-success'}`} role="alert">
+                      {submitMessage} {submitState === 'error' && <a href={SUPPORT_MAILTO}>{SUPPORT_EMAIL}</a>}
                     </div>
                   )}
 
+                  <div className="form-section-heading"><span>01</span><div><h2>About you</h2><p>Basic contact and work authorization context.</p></div></div>
                   <div className="row g-3">
                     <div className="col-md-6">
                       <label className="form-label" htmlFor="fullName">
@@ -97,6 +132,19 @@ function Join() {
                       </select>
                     </div>
                     <div className="col-md-6">
+                      <label className="form-label" htmlFor="optEndDate">Work authorization end date</label>
+                      <input className="form-control" id="optEndDate" name="optEndDate" type="date" />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label" htmlFor="location">Current location</label>
+                      <input className="form-control" id="location" name="location" type="text" placeholder="City, State" required />
+                    </div>
+                  </div>
+
+                  <div className="form-divider" />
+                  <div className="form-section-heading"><span>02</span><div><h2>Your search</h2><p>Help us understand what a good opportunity looks like.</p></div></div>
+                  <div className="row g-3">
+                    <div className="col-md-6">
                       <label className="form-label" htmlFor="plan">
                         Plan
                       </label>
@@ -118,9 +166,21 @@ function Join() {
                         Preferred batch
                       </label>
                       <select className="form-select" id="batchMonth" name="batchMonth" required>
-                        <option>Next available batch</option>
-                        <option>This month</option>
+                        <option>Next available sprint</option>
+                        <option>Within 2 weeks</option>
                         <option>Next month</option>
+                      </select>
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label" htmlFor="experience">Years of relevant experience</label>
+                      <select className="form-select" id="experience" name="experience" required>
+                        <option value="">Choose one</option><option>Less than 1 year</option><option>1–2 years</option><option>3–5 years</option><option>5+ years</option>
+                      </select>
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label" htmlFor="workMode">Preferred work mode</label>
+                      <select className="form-select" id="workMode" name="workMode" required>
+                        <option value="">Choose one</option><option>Open to any</option><option>On-site</option><option>Hybrid</option><option>Remote</option>
                       </select>
                     </div>
                     <div className="col-12">
@@ -136,6 +196,11 @@ function Join() {
                         required
                       />
                     </div>
+                  </div>
+
+                  <div className="form-divider" />
+                  <div className="form-section-heading"><span>03</span><div><h2>Your materials</h2><p>Links must be viewable by anyone who has them.</p></div></div>
+                  <div className="row g-3">
                     <div className="col-md-6">
                       <label className="form-label" htmlFor="linkedin">
                         LinkedIn URL
@@ -154,11 +219,17 @@ function Join() {
                       </label>
                       <textarea className="form-control" id="notes" name="notes" rows="4" />
                     </div>
+                    <div className="col-12">
+                      <div className="form-check consent-check">
+                        <input className="form-check-input" id="consent" name="consent" type="checkbox" value="accepted" required />
+                        <label className="form-check-label" htmlFor="consent">I confirm that the information is accurate and agree to be contacted about my fit review. I understand OPTBridge does not guarantee interviews, sponsorship, or employment.</label>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="d-flex flex-column flex-sm-row gap-3 mt-4">
-                    <button className="btn btn-primary btn-lg" type="submit">
-                      Submit Intake
+                    <button className="btn btn-primary btn-lg" type="submit" disabled={submitState === 'submitting'}>
+                      {submitState === 'submitting' ? 'Sending…' : 'Request my fit review'} <Icon name="arrow" size={18} />
                     </button>
                     <Link className="btn btn-outline-secondary btn-lg" to="/#plans">
                       Compare Plans
@@ -167,25 +238,24 @@ function Join() {
                 </form>
               </div>
 
-              <div className="col-lg-5">
+              <div className="col-lg-4">
                 <aside className="selected-plan-card">
-                  <span className="badge text-bg-success mb-3">Selected plan</span>
+                  <span className="plan-eyebrow">Selected sprint</span>
                   <h2 className="h3">{plan.name}</h2>
                   <p className="text-secondary">{plan.description}</p>
                   <div className="d-flex align-items-end gap-1 mb-4">
                     <span className="plan-price">{plan.price}</span>
-                    <span className="text-secondary pb-2">{plan.billing}</span>
+                    <span className="plan-billing">{plan.billing}</span>
                   </div>
                   <ul className="list-unstyled d-grid gap-3 mb-0">
                     {plan.features.map((feature) => (
                       <li className="d-flex gap-2" key={feature}>
-                        <span className="checkmark" aria-hidden="true">
-                          +
-                        </span>
+                        <span className="checkmark" aria-hidden="true"><Icon name="check" size={14} /></span>
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
+                  <div className="next-steps-box"><strong>What happens next?</strong><ol><li>We review profile fit.</li><li>You receive a scope recommendation.</li><li>You decide whether to start.</li></ol></div>
                 </aside>
               </div>
             </div>
@@ -198,4 +268,3 @@ function Join() {
 }
 
 export default Join;
-

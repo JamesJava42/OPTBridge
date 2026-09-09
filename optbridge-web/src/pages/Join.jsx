@@ -5,6 +5,7 @@ import Footer from '../components/Footer.jsx';
 import Icon from '../components/Icon.jsx';
 import { plans } from '../data/plans.js';
 import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../config/site.js';
+import { submitFormToWebhook } from '../services/formWebhook.js';
 import { track } from '@vercel/analytics';
 
 const planNames = plans.map((plan) => plan.name);
@@ -25,7 +26,7 @@ function Join() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const endpoint = import.meta.env.VITE_INTAKE_ENDPOINT;
+    const endpoint = import.meta.env.VITE_FORM_WEBHOOK_URL;
     const fields = Object.fromEntries(new FormData(form).entries());
     const payload = {
       ...fields,
@@ -49,15 +50,10 @@ function Join() {
     }
 
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) throw new Error('Submission failed');
+      const response = await submitFormToWebhook(endpoint, 'fit_review', payload);
       track('Fit Review Submitted', { plan: fields.plan });
       setSubmitState('success');
-      setSubmitMessage('Your fit request has been received. We’ll review it and email you with next steps.');
+      setSubmitMessage(`Your fit request ${response.requestId} was received. We’ll review it and email you with next steps.`);
       form.reset();
       setSelectedPlan(startingPlan);
     } catch {
@@ -219,10 +215,11 @@ function Join() {
                       </label>
                       <textarea className="form-control" id="notes" name="notes" rows="4" />
                     </div>
+                    <div className="form-honeypot" aria-hidden="true"><label htmlFor="joinWebsite">Website</label><input id="joinWebsite" name="website" tabIndex="-1" autoComplete="off" /></div>
                     <div className="col-12">
                       <div className="form-check consent-check">
                         <input className="form-check-input" id="consent" name="consent" type="checkbox" value="accepted" required />
-                        <label className="form-check-label" htmlFor="consent">I confirm that the information is accurate and agree to be contacted about my fit review. I understand OPTBridge does not guarantee interviews, sponsorship, or employment.</label>
+                        <label className="form-check-label" htmlFor="consent">I confirm that the information is accurate and agree to receive a confirmation and automated fit-review status emails over the next 34 hours. Every email includes an opt-out link. I understand OPTBridge does not guarantee interviews, sponsorship, or employment.</label>
                       </div>
                     </div>
                   </div>

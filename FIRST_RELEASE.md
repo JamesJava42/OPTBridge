@@ -11,7 +11,7 @@ Secondary conversion: **Contact request submitted**
 ## Recommended launch stack
 
 - **Frontend and traffic analytics:** Vercel
-- **Contact and fit-review delivery:** Formspree
+- **Contact and fit-review delivery:** Google Sheets + Google Apps Script
 - **Notification inbox:** `optbridgesupport@gmail.com`
 - **Source control and automatic deployments:** GitHub `main` branch
 
@@ -20,14 +20,11 @@ Do not publish the personal phone number for the first release. The support emai
 ## One-time setup before sharing
 
 1. Secure `optbridgesupport@gmail.com` with recovery information and two-factor authentication.
-2. In Formspree, create two forms that notify `optbridgesupport@gmail.com`:
-   - `OPTBridge Contact`
-   - `OPTBridge Fit Review`
+2. Create the private Google Sheet and deploy the Apps Script handler by following `optbridge-web/google-apps-script/README.md`.
 3. Import the GitHub repository into Vercel.
 4. Set the Vercel project root directory to `optbridge-web`.
 5. Add these Production environment variables in Vercel:
-   - `VITE_CONTACT_ENDPOINT`
-   - `VITE_INTAKE_ENDPOINT`
+   - `VITE_FORM_WEBHOOK_URL`
    - `VITE_ENABLE_PORTAL_DEMO=true`
 6. Enable Vercel Web Analytics in the project dashboard.
 7. Deploy, then submit both forms from an incognito mobile browser.

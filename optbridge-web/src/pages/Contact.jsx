@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import Icon from '../components/Icon.jsx';
 import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../config/site.js';
+import { submitFormToWebhook } from '../services/formWebhook.js';
 import { track } from '@vercel/analytics';
 
 const CONTACT_KEY = 'optbridge-demo-contact-requests';
@@ -35,17 +36,16 @@ function Contact() {
       source: 'OPTBridge public contact form',
       _subject: `[OPTBridge] ${topicLabels[data.topic]}: ${data.subject}`,
     };
-    const endpoint = import.meta.env.VITE_CONTACT_ENDPOINT;
+    const endpoint = import.meta.env.VITE_FORM_WEBHOOK_URL;
     setState('submitting');
     setMessage('');
 
     if (endpoint) {
       try {
-        const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) });
-        if (!response.ok) throw new Error('Request failed');
+        const response = await submitFormToWebhook(endpoint, 'contact', request);
         track('Contact Request Submitted', { topic: data.topic });
         setState('success');
-        setMessage(`Your request ${request.id} was sent. We’ll reply using the email you provided.`);
+        setMessage(`Your request ${response.requestId} was received. We’ll reply using the email you provided.`);
         form.reset();
         setTopic('before-joining');
         return;
@@ -92,7 +92,8 @@ function Contact() {
                   <div className="col-md-6"><label htmlFor="contactTopic">What can we help with?</label><select id="contactTopic" name="topic" value={topic} onChange={(event) => setTopic(event.target.value)} required>{Object.entries(topicLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></div>
                   <div className="col-md-6"><label htmlFor="contactUsername">Portal username <small>Optional</small></label><input id="contactUsername" name="username" autoComplete="off" placeholder="Never enter your password" /></div>
                   <div className="col-12"><label htmlFor="contactSubject">Subject</label><input id="contactSubject" name="subject" placeholder="Short summary" required /></div>
-                  <div className="col-12"><label htmlFor="contactDetails">Details</label><textarea id="contactDetails" name="details" rows="6" placeholder="What happened, what did you expect, and what have you already tried?" required /></div>
+                  <div className="col-12"><label htmlFor="contactDetails">Details</label><textarea id="contactDetails" name="details" rows="6" maxLength="3000" placeholder="What happened, what did you expect, and what have you already tried?" required /></div>
+                  <div className="form-honeypot" aria-hidden="true"><label htmlFor="contactWebsite">Website</label><input id="contactWebsite" name="website" tabIndex="-1" autoComplete="off" /></div>
                 </div>
                 <div className="contact-form-footer"><span><Icon name="shield" size={16} /> Do not include passwords, SSNs, immigration documents, or card numbers.</span><button className="btn btn-primary" type="submit" disabled={state === 'submitting'}>{state === 'submitting' ? 'Sending…' : 'Send request'} <Icon name="arrow" size={17} /></button></div>
               </form>

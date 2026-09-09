@@ -51,7 +51,7 @@ function SupportDesk() {
           <div className="detail-label">{selected.id}</div>
           <h2>{selected.subject}</h2>
           <div className="issue-meta"><span>{selected.category}</span><span className={`priority ${selected.priority.toLowerCase()}`}>{selected.priority}</span></div>
-          <div className="customer-summary"><span className="portal-avatar">{selected.student[0]}</span><div><strong>{selected.student}</strong><small>Active Copilot subscriber</small></div></div>
+          <div className="customer-summary"><span className="portal-avatar">{selected.student[0]}</span><div><strong>{selected.student}</strong><small>Active Career Accelerator subscriber</small></div></div>
           <div className="issue-detail-block"><small>Customer note</small><p>{selected.message || 'I updated the document link, but the tracker still says the file cannot be opened. Can someone verify the permission?'}</p></div>
           <dl className="detail-list"><div><dt>Owner</dt><dd>{selected.owner}</dd></div><div><dt>Last updated</dt><dd>{selected.updated}</dd></div><div><dt>Your access</dt><dd>{user.role === 'admin' ? 'Administrator' : 'Read only'}</dd></div></dl>
           <div className="readonly-action"><Icon name="shield" size={17} /> Employees can inspect and escalate. Only an admin or assigned service owner can change customer records.</div>

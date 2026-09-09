@@ -36,7 +36,7 @@ function Navbar() {
               How it works
             </a>
             <a className="nav-link" href="/#plans" onClick={closeMenu}>
-              Plans
+              Pricing
             </a>
             <a className="nav-link" href="/#faq" onClick={closeMenu}>
               FAQ

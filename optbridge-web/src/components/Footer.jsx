@@ -26,7 +26,7 @@ function Footer() {
               Tracker
             </a>
             <a className="footer-link" href="/#plans">
-              Plans
+              Pricing
             </a>
           </div>
           <div className="col-6 col-lg-2">

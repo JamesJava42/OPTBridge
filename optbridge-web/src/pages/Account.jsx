@@ -7,7 +7,7 @@ import { plans } from '../data/plans.js';
 
 function Account() {
   const { user } = useAuth();
-  const plan = plans.find((candidate) => candidate.name === user.plan) || plans[2];
+  const plan = plans.find((candidate) => candidate.name === user.plan) || plans[0];
   const [autoRenew, setAutoRenew] = useState(true);
   const [discount, setDiscount] = useState('');
   const [discountState, setDiscountState] = useState('idle');
@@ -24,7 +24,7 @@ function Account() {
   };
 
   return (
-    <PortalLayout eyebrow="Membership · Plan and account" title="Plan & access" actions={<Link className="btn btn-outline-dark" to="/#plans">Compare plans</Link>}>
+    <PortalLayout eyebrow="Membership · Plan and account" title="Plan & access" actions={<Link className="btn btn-outline-dark" to="/#plans">View current offer</Link>}>
       {notice && <div className="admin-notice" role="status"><Icon name="check" size={17} />{notice}<button type="button" onClick={() => setNotice('')}>×</button></div>}
 
       <section className="membership-hero">
@@ -40,7 +40,7 @@ function Account() {
       <section className="account-grid">
         <div className="account-main-column">
           <article className="portal-panel account-panel">
-            <div className="portal-panel-heading"><div><h2>What your plan includes</h2><p>Your active Copilot support for this sprint.</p></div><span className="portal-plan-pill">5 benefits</span></div>
+            <div className="portal-panel-heading"><div><h2>What your plan includes</h2><p>Your active Career Accelerator support for this sprint.</p></div><span className="portal-plan-pill">5 benefits</span></div>
             <div className="benefit-grid">
               {plan.features.map((feature, index) => (
                 <div key={feature}><span><Icon name={['compass', 'document', 'shield', 'human', 'target'][index]} size={18} /></span><div><strong>{feature}</strong><small>{['Targeted around your search profile', 'Aligned to priority opportunities', 'Checked before candidate review', 'Response during the active sprint', 'Performance signals and next steps'][index]}</small></div></div>

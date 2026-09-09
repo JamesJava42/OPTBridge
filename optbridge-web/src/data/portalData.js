@@ -6,7 +6,7 @@ export const demoAccounts = [
     name: 'Maya Patel',
     role: 'subscriber',
     subscription: 'active',
-    plan: 'Copilot',
+    plan: 'OPT Career Accelerator',
   },
   {
     id: 'employee-1',

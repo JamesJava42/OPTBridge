@@ -15,9 +15,9 @@ export const faqs = [
       'We review your goals, work authorization, target roles, location preferences, and resume. After confirming fit and scope, we set up your 30-day sprint and shared tracker.',
   },
   {
-    question: 'Can I change plans later?',
+    question: 'Can I pause or cancel after a sprint?',
     answer:
-      'Yes. Every sprint is month-to-month. You can change your support level before the next sprint or simply choose not to renew.',
+      'Yes. The Career Accelerator runs in 30-day sprints. Before the next sprint, you can choose whether to continue or simply not renew.',
   },
   {
     question: 'How are applications tracked?',

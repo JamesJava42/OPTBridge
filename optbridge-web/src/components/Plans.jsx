@@ -8,16 +8,16 @@ function Plans() {
       <div className="container">
         <div className="row justify-content-center text-center section-heading">
           <div className="col-lg-8">
-            <p className="section-eyebrow">Simple 30-day pricing</p>
-            <h2 className="section-title">Choose how hands-on you want us to be.</h2>
-            <p className="section-subtitle">Start with a fit review. We confirm scope before you pay.</p>
+            <p className="section-eyebrow">One focused 30-day plan</p>
+            <h2 className="section-title">Everything you need to move your job search forward.</h2>
+            <p className="section-subtitle">One complete service, no confusing tiers. Start with a free fit review—we confirm scope before you pay.</p>
           </div>
         </div>
-        <div className="row g-4 align-items-stretch">
+        <div className="row g-4 align-items-stretch justify-content-center">
           {plans.map((plan) => (
-            <div className="col-lg-4" key={plan.name}>
+            <div className="col-lg-7 col-xl-6" key={plan.name}>
               <div className={`plan-card h-100 ${plan.popular ? 'plan-card-popular' : ''}`}>
-                {plan.popular && <span className="popular-label">Most complete</span>}
+                {plan.popular && <span className="popular-label">Flagship offer</span>}
                 <span className="plan-eyebrow">{plan.eyebrow}</span>
                 <h3 className="h4">{plan.name}</h3>
                 <p className="text-secondary">{plan.description}</p>

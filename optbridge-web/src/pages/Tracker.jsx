@@ -44,9 +44,9 @@ function Tracker() {
 
   return (
     <PortalLayout
-      eyebrow="Copilot sprint · Week 2 of 4"
+      eyebrow="Career Accelerator · Week 2 of 4"
       title="Good morning, Maya"
-      actions={<span className="portal-plan-pill"><span className="pulse-dot" /> Copilot active</span>}
+      actions={<span className="portal-plan-pill"><span className="pulse-dot" /> Accelerator active</span>}
     >
       {notice && <div className="tracker-notice" role="status"><Icon name="check" size={16} />{notice}<button type="button" onClick={() => setNotice('')}>×</button></div>}
       <section className="portal-metrics">

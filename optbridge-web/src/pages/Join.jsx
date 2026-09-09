@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import Icon from '../components/Icon.jsx';
@@ -8,20 +8,10 @@ import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../config/site.js';
 import { submitFormToWebhook } from '../services/formWebhook.js';
 import { track } from '@vercel/analytics';
 
-const planNames = plans.map((plan) => plan.name);
-
 function Join() {
-  const [searchParams] = useSearchParams();
-  const requestedPlan = searchParams.get('plan');
-  const startingPlan = planNames.includes(requestedPlan) ? requestedPlan : 'Copilot';
-  const [selectedPlan, setSelectedPlan] = useState(startingPlan);
   const [submitState, setSubmitState] = useState('idle');
   const [submitMessage, setSubmitMessage] = useState('');
-
-  const plan = useMemo(
-    () => plans.find((currentPlan) => currentPlan.name === selectedPlan) || plans[2],
-    [selectedPlan]
-  );
+  const plan = plans[0];
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,7 +45,6 @@ function Join() {
       setSubmitState('success');
       setSubmitMessage(`Your fit request ${response.requestId} was received. We’ll review it and email you with next steps.`);
       form.reset();
-      setSelectedPlan(startingPlan);
     } catch {
       setSubmitState('error');
       setSubmitMessage('We could not send your request. Please try again or contact support.');
@@ -144,18 +133,7 @@ function Join() {
                       <label className="form-label" htmlFor="plan">
                         Plan
                       </label>
-                      <select
-                        className="form-select"
-                        id="plan"
-                        name="plan"
-                        value={selectedPlan}
-                        onChange={(event) => setSelectedPlan(event.target.value)}
-                        required
-                      >
-                        {plans.map((currentPlan) => (
-                          <option key={currentPlan.name}>{currentPlan.name}</option>
-                        ))}
-                      </select>
+                      <input className="form-control" id="plan" name="plan" value={plan.name} readOnly />
                     </div>
                     <div className="col-md-6">
                       <label className="form-label" htmlFor="batchMonth">
@@ -229,7 +207,7 @@ function Join() {
                       {submitState === 'submitting' ? 'Sending…' : 'Request my fit review'} <Icon name="arrow" size={18} />
                     </button>
                     <Link className="btn btn-outline-secondary btn-lg" to="/#plans">
-                      Compare Plans
+                      View offer
                     </Link>
                   </div>
                 </form>

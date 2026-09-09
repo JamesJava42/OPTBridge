@@ -242,6 +242,7 @@ function Join() {
                   <p className="text-secondary">{plan.description}</p>
                   {plan.sale && <span className="sale-price-label">Sale price</span>}
                   <div className="d-flex align-items-end gap-1 mb-4">
+                    {plan.originalPrice && <span className="plan-original-price">{plan.originalPrice}</span>}
                     <span className="plan-price">{plan.price}</span>
                     <span className="plan-billing">{plan.billing}</span>
                   </div>

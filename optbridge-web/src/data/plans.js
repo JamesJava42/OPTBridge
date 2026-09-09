@@ -2,7 +2,6 @@ export const plans = [
   {
     name: 'Launch',
     price: '$149',
-    sale: true,
     billing: '/ 30-day sprint',
     description: 'Build consistency with AI-assisted targeting and a clean application system.',
     eyebrow: 'Start with structure',
@@ -30,7 +29,9 @@ export const plans = [
   },
   {
     name: 'Copilot',
-    price: '$249',
+    price: '$149',
+    originalPrice: '$249',
+    sale: true,
     billing: '/ 30-day sprint',
     description: 'A hands-on AI + human workflow for candidates who want full support.',
     eyebrow: 'Most hands-on',

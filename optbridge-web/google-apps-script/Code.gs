@@ -313,7 +313,7 @@ function responsePage_(ok, clientSubmissionId, requestId, errorMessage) {
     error: errorMessage || ''
   };
   var script = '<!doctype html><meta charset="utf-8"><script>' +
-    'window.parent.postMessage(' + JSON.stringify(message).replace(/</g, '\\u003c') + ',' +
+    'window.top.postMessage(' + JSON.stringify(message).replace(/</g, '\\u003c') + ',' +
     JSON.stringify(CONFIG.FRONTEND_ORIGIN) + ');<\/script>';
   return HtmlService.createHtmlOutput(script).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }

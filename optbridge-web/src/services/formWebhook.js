@@ -1,6 +1,17 @@
 const RESPONSE_SOURCE = 'optbridge-form-webhook';
 const RESPONSE_TIMEOUT_MS = 15000;
 
+function isGoogleResponseOrigin(origin) {
+  if (origin === 'null') return true;
+
+  try {
+    const hostname = new URL(origin).hostname;
+    return hostname === 'script.google.com' || hostname.endsWith('.googleusercontent.com');
+  } catch {
+    return false;
+  }
+}
+
 function createSubmissionId() {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -8,6 +19,14 @@ function createSubmissionId() {
 
 export function submitFormToWebhook(endpoint, formType, fields) {
   if (!endpoint) return Promise.reject(new Error('The form webhook is not configured.'));
+
+  try {
+    if (new URL(endpoint).hostname !== 'script.google.com') {
+      return Promise.reject(new Error('The form webhook URL is invalid.'));
+    }
+  } catch {
+    return Promise.reject(new Error('The form webhook URL is invalid.'));
+  }
 
   return new Promise((resolve, reject) => {
     const clientSubmissionId = createSubmissionId();
@@ -32,7 +51,10 @@ export function submitFormToWebhook(endpoint, formType, fields) {
     };
 
     const handleMessage = (event) => {
-      if (event.source !== iframe.contentWindow) return;
+      // Apps Script renders HtmlService output in a nested googleusercontent
+      // frame, so its WindowProxy is not the outer target iframe. Verify the
+      // Google origin and the per-request UUID instead.
+      if (!isGoogleResponseOrigin(event.origin)) return;
       const data = event.data;
       if (!data || data.source !== RESPONSE_SOURCE || data.clientSubmissionId !== clientSubmissionId) return;
 

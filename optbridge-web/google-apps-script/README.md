@@ -17,7 +17,7 @@ This is the no-database submission handler for the public Contact and Fit Review
 9. In Vercel, add `VITE_FORM_WEBHOOK_URL` to the Production environment with that `/exec` URL, then redeploy.
 10. Submit one Contact request and one Fit Review from an incognito window. Verify the rows, both immediate emails, and the Apps Script **Executions** log.
 
-When `Code.gs` changes, create a new Web App version from **Deploy → Manage deployments → Edit → New version**, then deploy it. The `/exec` URL normally remains the same.
+When `Code.gs` changes, create a new Web App version from **Deploy → Manage deployments → Edit → New version**, then deploy it. Saving the editor alone does not update the production `/exec` deployment. The `/exec` URL normally remains the same.
 
 ## Operating the sheet
 

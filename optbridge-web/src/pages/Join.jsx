@@ -240,6 +240,7 @@ function Join() {
                   <span className="plan-eyebrow">Selected sprint</span>
                   <h2 className="h3">{plan.name}</h2>
                   <p className="text-secondary">{plan.description}</p>
+                  {plan.sale && <span className="sale-price-label">Sale price</span>}
                   <div className="d-flex align-items-end gap-1 mb-4">
                     <span className="plan-price">{plan.price}</span>
                     <span className="plan-billing">{plan.billing}</span>

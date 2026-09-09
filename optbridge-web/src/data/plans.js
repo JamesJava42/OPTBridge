@@ -2,6 +2,7 @@ export const plans = [
   {
     name: 'Launch',
     price: '$149',
+    sale: true,
     billing: '/ 30-day sprint',
     description: 'Build consistency with AI-assisted targeting and a clean application system.',
     eyebrow: 'Start with structure',

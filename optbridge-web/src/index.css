@@ -152,6 +152,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand { font-family: "Manrope", sans-serif; }
 .plan-eyebrow { color: #168056; display: block; font-size: .68rem; font-weight: 800; letter-spacing: .1em; margin-bottom: .6rem; text-transform: uppercase; }
 .plan-card h3 { font-weight: 800; }.plan-card > p { font-size: .9rem; line-height: 1.55; min-height: 44px; }
 .plan-price { color: var(--ink); font-family: "Manrope",sans-serif; font-size: 2.7rem; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.sale-price-label { align-self: flex-start; background: #d9fbe9; border: 1px solid #a9eac9; border-radius: 999px; color: #09613f; display: inline-flex; font-size: .66rem; font-weight: 800; letter-spacing: .08em; margin-bottom: .65rem; padding: .35rem .62rem; text-transform: uppercase; }
 .plan-billing { color: var(--muted); font-size: .76rem; padding-bottom: .25rem; }
 .plan-card li, .selected-plan-card li { font-size: .87rem; }
 .checkmark { align-items: center; background: #e3f6ea; border-radius: 50%; color: #168056; display: inline-flex; flex: 0 0 1.35rem; height: 1.35rem; justify-content: center; margin-top: .05rem; width: 1.35rem; }

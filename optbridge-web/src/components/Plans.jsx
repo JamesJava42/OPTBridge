@@ -21,6 +21,7 @@ function Plans() {
                 <span className="plan-eyebrow">{plan.eyebrow}</span>
                 <h3 className="h4">{plan.name}</h3>
                 <p className="text-secondary">{plan.description}</p>
+                {plan.sale && <span className="sale-price-label">Sale price</span>}
                 <div className="d-flex align-items-end gap-1 mb-4">
                   <span className="plan-price">{plan.price}</span>
                   <span className="plan-billing">{plan.billing}</span>
